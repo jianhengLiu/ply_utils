@@ -83,7 +83,7 @@ namespace tinyply
         Buffer(const size_t size) : data(new uint8_t[size], delete_array()), size(size) { alias = data.get(); } // allocating
         Buffer(const uint8_t * ptr): alias(const_cast<uint8_t*>(ptr)) { } // non-allocating, todo: set size?
         uint8_t * get() { return alias; }
-        const uint8_t * get_const() {return const_cast<const uint8_t*>(alias); }
+        const uint8_t * get_const() const {return alias; }
         size_t size_bytes() const { return size; }
     };
 
@@ -888,10 +888,11 @@ void PlyFile::PlyFileImpl::parse_data(std::istream & is, bool firstPass)
             }
             else
             {
+                dummyCount = 0;
                 read_property_ascii(p.listType, f.list_stride, &listSize, dummyCount, sizeof(listSize), _is); // the list size
                 for (size_t i = 0; i < listSize; ++i)
                 {
-                    read_property_ascii(p.propertyType, f.prop_stride, dest + destOffset, destOffset, destOffset, _is);
+                    read_property_ascii(p.propertyType, f.prop_stride, dest + destOffset, destOffset, destSize, _is);
                 }
             }
         };

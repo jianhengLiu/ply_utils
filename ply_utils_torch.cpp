@@ -186,6 +186,53 @@ void face_to_ply(const torch::Tensor &face_xyz, const torch::Tensor &face_attr,
   mesh_ply.write(outstream_ascii, false);
 }
 
+void face_indice_to_ply(const torch::Tensor &face_xyz,
+                        const torch::Tensor &face_indices,
+                        const std::string &filename, bool vis_attribute) {
+
+  auto face_xyz_cpu = face_xyz.cpu().contiguous();
+  auto face_indices_cpu = face_indices.to(torch::kInt32).cpu().contiguous();
+
+  tinyply::PlyFile mesh_ply;
+  mesh_ply.add_properties_to_element(
+      "vertex", {"x", "y", "z"},
+      ply_utils::torch_type_to_ply_type(face_xyz_cpu.scalar_type()),
+      face_xyz_cpu.size(0),
+      reinterpret_cast<uint8_t *>(face_xyz_cpu.data_ptr()),
+      tinyply::Type::INVALID, 0);
+
+  // if (vis_attribute) {
+  //   auto tmp_face_normal_color = cal_face_normal_color(face_xyz);
+  //   tmp_face_normal_color =
+  //       tmp_face_normal_color.unsqueeze(1).expand({face_num, 3, 3});
+  //   tmp_face_normal_color = (tmp_face_normal_color * 255).to(torch::kUInt8);
+  //   mesh_ply.add_properties_to_element(
+  //       "vertex", {"red", "green", "blue"}, tinyply::Type::UINT8, vertex_num,
+  //       reinterpret_cast<uint8_t *>(tmp_face_normal_color.data_ptr()),
+  //       tinyply::Type::INVALID, 0);
+  // }
+
+  mesh_ply.add_properties_to_element(
+      "face", {"vertex_indices"},
+      ply_utils::torch_type_to_ply_type(face_indices_cpu.scalar_type()),
+      face_indices_cpu.size(0),
+      reinterpret_cast<uint8_t *>(face_indices_cpu.data_ptr()),
+      tinyply::Type::UINT8, 3);
+  printf("\033[1;34mSaving mesh to: %s\n\033[0m", filename.c_str());
+  // make directory if not exist
+  std::string dir = filename.substr(0, filename.find_last_of('/'));
+  if (!dir.empty()) {
+    std::filesystem::create_directories(dir);
+  }
+  std::filebuf fb_ascii;
+  fb_ascii.open(filename, std::ios::out);
+  std::ostream outstream_ascii(&fb_ascii);
+  if (outstream_ascii.fail())
+    throw std::runtime_error("failed to open " + filename);
+  // Write an ASCII file
+  mesh_ply.write(outstream_ascii, false);
+}
+
 torch::Tensor tinyply_floatdata_to_torch_tensor(
     const std::shared_ptr<tinyply::PlyData> &_p_plydata, int _dim) {
   if (_p_plydata->t == tinyply::Type::FLOAT32) {

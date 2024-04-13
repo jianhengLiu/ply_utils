@@ -26,6 +26,11 @@ void face_to_ply(const torch::Tensor &face_xyz, const std::string &filename,
 void face_to_ply(const torch::Tensor &face_xyz, const torch::Tensor &face_attr,
                  const std::string &filename);
 
+void face_indice_to_ply(const torch::Tensor &face_xyz,
+                        const torch::Tensor &face_indices,
+                        const std::string &filename,
+                        bool vis_attribute = false);
+
 torch::Tensor tinyply_floatdata_to_torch_tensor(
     const std::shared_ptr<tinyply::PlyData> &_p_plydata, int _dim);
 
