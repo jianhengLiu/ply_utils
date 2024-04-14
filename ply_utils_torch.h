@@ -14,7 +14,8 @@ void export_to_ply(const std::filesystem::path &output_path,
                    const torch::Tensor &_rgb = torch::Tensor(),
                    const torch::Tensor &_origin = torch::Tensor(),
                    const torch::Tensor &_dir = torch::Tensor(),
-                   const torch::Tensor &_depth = torch::Tensor());
+                   const torch::Tensor &_depth = torch::Tensor(),
+                   const torch::Tensor &_normal = torch::Tensor());
 
 torch::Tensor cal_face_normal(const torch::Tensor &face_xyz);
 

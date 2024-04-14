@@ -28,7 +28,7 @@ tinyply::Type torch_type_to_ply_type(const torch::ScalarType &dtype) {
 void export_to_ply(const std::filesystem::path &output_path,
                    const torch::Tensor &_xyz, const torch::Tensor &_rgb,
                    const torch::Tensor &_origin, const torch::Tensor &_dir,
-                   const torch::Tensor &_depth) {
+                   const torch::Tensor &_depth, const torch::Tensor &_normal) {
   // Make sure input tensor is on CPU
   std::string filename = output_path;
 
@@ -71,6 +71,14 @@ void export_to_ply(const std::filesystem::path &output_path,
         "vertex", {"depth"},
         ply_utils::torch_type_to_ply_type(_depth.scalar_type()), _depth.size(0),
         reinterpret_cast<uint8_t *>(_depth.cpu().data_ptr()),
+        tinyply::Type::INVALID, 0);
+  }
+
+  if (_normal.numel() > 0) {
+    export_ply.add_properties_to_element(
+        "vertex", {"nx", "ny", "nz"},
+        ply_utils::torch_type_to_ply_type(_normal.scalar_type()),
+        _normal.size(0), reinterpret_cast<uint8_t *>(_normal.cpu().data_ptr()),
         tinyply::Type::INVALID, 0);
   }
 
