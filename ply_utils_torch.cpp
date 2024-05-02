@@ -82,8 +82,7 @@ void export_to_ply(const std::filesystem::path &output_path,
         tinyply::Type::INVALID, 0);
   }
 
-  std::cout << "\033[1m\033[34mSaving inrange gt ply to: " << filename
-            << "\n\033[0m";
+  std::cout << "\033[1m\033[34m\nSaving ply to: " << filename << "\n\033[0m";
   std::filebuf fb_ascii;
   fb_ascii.open(filename, std::ios::out);
   std::ostream outstream_ascii(&fb_ascii);
