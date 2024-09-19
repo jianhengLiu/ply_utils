@@ -42,7 +42,7 @@ torch::Tensor tinyply_floatdata_to_torch_tensor(
 bool read_ply_file_to_map_tensor(
     const std::string &filepath,
     std::map<std::string, torch::Tensor> &map_ply_tensor,
-    const torch::Device &_device);
+    const torch::Device &_device = torch::Device(torch::kCPU));
 
 bool read_ply_file_to_tensor(const std::string &filepath,
                              torch::Tensor &_points, torch::Device &_device);
