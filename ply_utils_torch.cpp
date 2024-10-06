@@ -1,7 +1,8 @@
 #include "ply_utils_torch.h"
-#include "tinyply.h"
 #include <fstream>
+
 #define TINYPLY_IMPLEMENTATION
+#include "tinyply.h"
 
 namespace ply_utils {
 
