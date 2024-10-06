@@ -1,9 +1,7 @@
-#pragma once
-
-#include "tinyply.h"
-#define TINYPLY_IMPLEMENTATION
-
 #include "ply_utils_torch.h"
+#include "tinyply.h"
+#include <fstream>
+#define TINYPLY_IMPLEMENTATION
 
 namespace ply_utils {
 
