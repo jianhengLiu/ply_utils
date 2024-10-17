@@ -1,4 +1,3 @@
-#pragma once
 #include "ply_utils_pcl.h"
 
 #include "tinyply.h"
