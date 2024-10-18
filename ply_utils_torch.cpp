@@ -38,7 +38,8 @@ void export_to_ply(const std::filesystem::path &output_path,
     export_ply.add_properties_to_element(
         "vertex", {"x", "y", "z"},
         ply_utils::torch_type_to_ply_type(xyz.scalar_type()), xyz.size(0),
-        reinterpret_cast<uint8_t *>(xyz.data_ptr()), tinyply::Type::INVALID, 0);
+        reinterpret_cast<uint8_t *>(xyz.cpu().data_ptr()),
+        tinyply::Type::INVALID, 0);
   }
 
   if (_rgb.numel() > 0) {
