@@ -33,52 +33,57 @@ void export_to_ply(const std::filesystem::path &output_path,
 
   tinyply::PlyFile export_ply;
 
-  if (_xyz.numel() > 0) {
-    auto xyz = _xyz.to(torch::kFloat32);
+  auto xyz_cpu = _xyz.to(torch::kFloat32).cpu().contiguous();
+  if (xyz_cpu.numel() > 0) {
     export_ply.add_properties_to_element(
         "vertex", {"x", "y", "z"},
-        ply_utils::torch_type_to_ply_type(xyz.scalar_type()), xyz.size(0),
-        reinterpret_cast<uint8_t *>(xyz.cpu().data_ptr()),
+        ply_utils::torch_type_to_ply_type(xyz_cpu.scalar_type()),
+        xyz_cpu.size(0), reinterpret_cast<uint8_t *>(xyz_cpu.data_ptr()),
         tinyply::Type::INVALID, 0);
   }
 
-  if (_rgb.numel() > 0) {
+  auto rgb_cpu = _rgb.cpu().contiguous();
+  if (rgb_cpu.numel() > 0) {
     export_ply.add_properties_to_element(
         "vertex", {"red", "green", "blue"},
-        ply_utils::torch_type_to_ply_type(_rgb.scalar_type()), _rgb.size(0),
-        reinterpret_cast<uint8_t *>(_rgb.cpu().data_ptr()),
+        ply_utils::torch_type_to_ply_type(rgb_cpu.scalar_type()),
+        rgb_cpu.size(0), reinterpret_cast<uint8_t *>(rgb_cpu.data_ptr()),
         tinyply::Type::INVALID, 0);
   }
 
-  if (_origin.numel() > 0) {
+  auto origin_cpu = _origin.cpu().contiguous();
+  if (origin_cpu.numel() > 0) {
     export_ply.add_properties_to_element(
         "vertex", {"ox", "oy", "oz"},
-        ply_utils::torch_type_to_ply_type(_origin.scalar_type()),
-        _origin.size(0), reinterpret_cast<uint8_t *>(_origin.cpu().data_ptr()),
+        ply_utils::torch_type_to_ply_type(origin_cpu.scalar_type()),
+        origin_cpu.size(0), reinterpret_cast<uint8_t *>(origin_cpu.data_ptr()),
         tinyply::Type::INVALID, 0);
   }
 
-  if (_dir.numel() > 0) {
+  auto dir_cpu = _dir.cpu().contiguous();
+  if (dir_cpu.numel() > 0) {
     export_ply.add_properties_to_element(
         "vertex", {"dx", "dy", "dz"},
-        ply_utils::torch_type_to_ply_type(_dir.scalar_type()), _dir.size(0),
-        reinterpret_cast<uint8_t *>(_dir.cpu().data_ptr()),
+        ply_utils::torch_type_to_ply_type(dir_cpu.scalar_type()),
+        dir_cpu.size(0), reinterpret_cast<uint8_t *>(dir_cpu.data_ptr()),
         tinyply::Type::INVALID, 0);
   }
 
+  auto depth_cpu = _depth.cpu().contiguous();
   if (_depth.numel() > 0) {
     export_ply.add_properties_to_element(
         "vertex", {"depth"},
-        ply_utils::torch_type_to_ply_type(_depth.scalar_type()), _depth.size(0),
-        reinterpret_cast<uint8_t *>(_depth.cpu().data_ptr()),
+        ply_utils::torch_type_to_ply_type(depth_cpu.scalar_type()),
+        depth_cpu.size(0), reinterpret_cast<uint8_t *>(depth_cpu.data_ptr()),
         tinyply::Type::INVALID, 0);
   }
 
-  if (_normal.numel() > 0) {
+  auto normal_cpu = _normal.cpu().contiguous();
+  if (normal_cpu.numel() > 0) {
     export_ply.add_properties_to_element(
         "vertex", {"nx", "ny", "nz"},
-        ply_utils::torch_type_to_ply_type(_normal.scalar_type()),
-        _normal.size(0), reinterpret_cast<uint8_t *>(_normal.cpu().data_ptr()),
+        ply_utils::torch_type_to_ply_type(normal_cpu.scalar_type()),
+        normal_cpu.size(0), reinterpret_cast<uint8_t *>(normal_cpu.data_ptr()),
         tinyply::Type::INVALID, 0);
   }
 
