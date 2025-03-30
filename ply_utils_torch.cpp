@@ -33,8 +33,9 @@ void export_to_ply(const std::filesystem::path &output_path,
 
   tinyply::PlyFile export_ply;
 
-  auto xyz_cpu = _xyz.to(torch::kFloat32).cpu().contiguous();
-  if (xyz_cpu.numel() > 0) {
+  torch::Tensor xyz_cpu, rgb_cpu, origin_cpu, dir_cpu, depth_cpu, normal_cpu;
+  if (_xyz.numel() > 0) {
+    xyz_cpu = _xyz.to(torch::kFloat32).cpu().contiguous();
     export_ply.add_properties_to_element(
         "vertex", {"x", "y", "z"},
         ply_utils::torch_type_to_ply_type(xyz_cpu.scalar_type()),
@@ -42,8 +43,8 @@ void export_to_ply(const std::filesystem::path &output_path,
         tinyply::Type::INVALID, 0);
   }
 
-  auto rgb_cpu = _rgb.cpu().contiguous();
-  if (rgb_cpu.numel() > 0) {
+  if (_rgb.numel() > 0) {
+    rgb_cpu = _rgb.cpu().contiguous();
     export_ply.add_properties_to_element(
         "vertex", {"red", "green", "blue"},
         ply_utils::torch_type_to_ply_type(rgb_cpu.scalar_type()),
@@ -51,8 +52,8 @@ void export_to_ply(const std::filesystem::path &output_path,
         tinyply::Type::INVALID, 0);
   }
 
-  auto origin_cpu = _origin.cpu().contiguous();
-  if (origin_cpu.numel() > 0) {
+  if (_origin.numel() > 0) {
+    origin_cpu = _origin.cpu().contiguous();
     export_ply.add_properties_to_element(
         "vertex", {"ox", "oy", "oz"},
         ply_utils::torch_type_to_ply_type(origin_cpu.scalar_type()),
@@ -60,8 +61,8 @@ void export_to_ply(const std::filesystem::path &output_path,
         tinyply::Type::INVALID, 0);
   }
 
-  auto dir_cpu = _dir.cpu().contiguous();
-  if (dir_cpu.numel() > 0) {
+  if (_dir.numel() > 0) {
+    dir_cpu = _dir.cpu().contiguous();
     export_ply.add_properties_to_element(
         "vertex", {"dx", "dy", "dz"},
         ply_utils::torch_type_to_ply_type(dir_cpu.scalar_type()),
@@ -69,8 +70,8 @@ void export_to_ply(const std::filesystem::path &output_path,
         tinyply::Type::INVALID, 0);
   }
 
-  auto depth_cpu = _depth.cpu().contiguous();
   if (_depth.numel() > 0) {
+    depth_cpu = _depth.cpu().contiguous();
     export_ply.add_properties_to_element(
         "vertex", {"depth"},
         ply_utils::torch_type_to_ply_type(depth_cpu.scalar_type()),
@@ -78,8 +79,8 @@ void export_to_ply(const std::filesystem::path &output_path,
         tinyply::Type::INVALID, 0);
   }
 
-  auto normal_cpu = _normal.cpu().contiguous();
-  if (normal_cpu.numel() > 0) {
+  if (_normal.numel() > 0) {
+    normal_cpu = _normal.cpu().contiguous();
     export_ply.add_properties_to_element(
         "vertex", {"nx", "ny", "nz"},
         ply_utils::torch_type_to_ply_type(normal_cpu.scalar_type()),
